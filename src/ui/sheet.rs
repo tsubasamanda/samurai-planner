@@ -1,4 +1,7 @@
+use std::collections::LinkedList;
+
 use egui::{Id, RichText};
+use egui_dnd::dnd;
 use uuid::Uuid;
 
 use crate::project::action::Action;
@@ -39,18 +42,30 @@ impl Window for SheetWindow {
                     ui.horizontal(|ui| {
                         ui.label("Name: ");
                         ui.text_edit_singleline(&mut self.sheet.title);
-                    })
+                    });
+
+                    if ui.button("Gear Options").clicked() {
+                        self.subwindows.gear_options = true;
+                    }
                 });
 
                 ui.separator();
-                for a in self.sheet.actions.iter() {
-                    ui.horizontal(|ui| {
-                        ui.label(RichText::new(a.timestamp()).monospace());
+                dnd(ui, "actions").show(self.sheet.actions.iter_mut(), |ui, item, handle, state| {
+                    handle.ui(ui, |ui| {
+                        ui.horizontal(|ui| {
+                            ui.label(RichText::new(item.timestamp()).monospace());
+                            item.meter_state.render(ui);
+                            if ui.button("\u{274e}").clicked() {
+                                item.flag_delete = true;
+                            }
+                        });
                     });
-                }
+                });
+
+                self.sheet.actions = self.sheet.actions.extract_if(|a| !a.flag_delete).collect::<LinkedList<_>>();
 
                 if ui.button("+").clicked() {
-                    self.sheet.actions.push(Action::default());
+                    self.sheet.actions.push_back(Action::default());
                 }
             });
     }

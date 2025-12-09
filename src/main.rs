@@ -1,6 +1,10 @@
 #![warn(clippy::all, rust_2018_idioms)]
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
+mod app;
+mod ui;
+mod window;
+mod project;
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result {
@@ -8,14 +12,14 @@ fn main() -> eframe::Result {
 
     let native_options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_inner_size([400.0, 300.0])
-            .with_min_inner_size([300.0, 220.0]),
+            .with_inner_size([1920.0, 1080.0])
+            .with_min_inner_size([1280.0, 720.0]),
         ..Default::default()
     };
     eframe::run_native(
-        "eframe template",
+        "Amanda's Samurai Planner",
         native_options,
-        Box::new(|cc| Ok(Box::new(samurai_planner::App::new(cc)))),
+        Box::new(|cc| Ok(Box::new(app::App::new(cc)))),
     )
 }
 
@@ -45,7 +49,7 @@ fn main() {
             .start(
                 canvas,
                 web_options,
-                Box::new(|cc| Ok(Box::new(eframe_template::TemplateApp::new(cc)))),
+                Box::new(|cc| Ok(Box::new(app::App::new(cc)))),
             )
             .await;
 

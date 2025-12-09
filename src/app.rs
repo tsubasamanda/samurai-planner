@@ -1,19 +1,21 @@
 #![warn(clippy::all, rust_2018_idioms)]
 
+use crate::project::sheet::Sheet;
+use crate::ui::sheet::SheetWindow;
+use crate::window::ActiveWindows;
+use crate::ui::about::AboutWindow;
+
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct App {
 	#[serde(skip)]
-    active_windows: crate::window::ActiveWindows,
-    #[serde(skip)]
-    open_projects: Vec<crate::project::project::Project>
+    active_windows: ActiveWindows,
 }
 
 impl Default for App {
     fn default() -> Self {
         Self {
-            active_windows: crate::window::ActiveWindows::new(),
-			open_projects: Vec::new()
+            active_windows: ActiveWindows::new()
         }
     }
 }
@@ -37,34 +39,22 @@ impl eframe::App for App {
         egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
             egui::MenuBar::new().ui(ui, |ui| {
                 ui.menu_button("File", |ui| {
-                    if ui.button("New Project").clicked() {
-                        
-                    }
-
-                    if ui.button("Open Project").clicked() {
-
+                    if ui.button("New Sheet").clicked() {
+                        self.active_windows.add(
+                            Box::new(
+                                SheetWindow::new(Sheet::default())
+                            )
+                        );
                     }
                 });
 
                 ui.menu_button("Help", |ui| {
                     if ui.button("About").clicked() {
-                        self.active_windows.add(Box::new(crate::ui::about::AboutWindow::default()));
+                        self.active_windows.add(Box::new(AboutWindow::default()));
                     }
                 });
             })
         });
-
-        egui::SidePanel::left("project_panel")
-            .min_width(300.0)
-            .show(ctx, |ui| {
-                for p in self.open_projects.iter() {
-                    ui.collapsing(p.title.clone(), |ui| {
-                        for s in p.sheets.iter() {
-                            ui.label(&*s.title);
-                        }
-                    });
-                }
-            });
 
         self.active_windows.render(ctx);
 		self.active_windows.prune();

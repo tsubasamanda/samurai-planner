@@ -20,7 +20,7 @@ impl Window for SheetWindow {
         egui::Window::new(self.sheet.title.clone())
             .open(&mut self.alive)
             .show(ctx, |ui| {
-
+                
             });
     }
 

@@ -5,6 +5,7 @@ use egui_dnd::DragDropItem;
 use uuid::Uuid;
 
 #[derive(PartialEq)]
+#[derive(serde::Deserialize, serde::Serialize)]
 struct SenState {
     getsu: bool,
     ka: bool,
@@ -32,7 +33,7 @@ impl SenState {
         }
     }
 }
-
+#[derive(serde::Deserialize, serde::Serialize)]
 #[derive(PartialEq)]
 pub struct MeterState {
     pub kenki: i8,
@@ -71,6 +72,7 @@ impl MeterState {
 }
 
 #[derive(PartialEq)]
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct Action {
     pub meter_state: MeterState,
     pub timestamp: Duration,

@@ -8,7 +8,6 @@ use crate::ui::about::AboutWindow;
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct App {
-	#[serde(skip)]
     active_windows: ActiveWindows
 }
 

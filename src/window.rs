@@ -1,3 +1,4 @@
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct ActiveWindows {
     windows: Vec<Box<dyn Window>>
 }
@@ -26,6 +27,7 @@ impl ActiveWindows {
     }
 }
 
+#[typetag::serde(tag = "type")]
 pub trait Window {
     fn window(&mut self, ctx: &egui::Context);
     fn alive(&self) -> bool;

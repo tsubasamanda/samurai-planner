@@ -6,6 +6,7 @@ mod ui;
 mod window;
 mod project;
 mod game;
+
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result {

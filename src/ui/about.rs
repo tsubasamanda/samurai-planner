@@ -1,5 +1,6 @@
 use crate::game_version;
 
+#[derive(serde::Deserialize, serde::Serialize)]
 pub struct AboutWindow {
     alive: bool
 }
@@ -10,6 +11,7 @@ impl Default for AboutWindow {
     }
 }
 
+#[typetag::serde]
 impl crate::window::Window for AboutWindow {
     fn window(&mut self, ctx: &egui::Context) {
         egui::Window::new("About")

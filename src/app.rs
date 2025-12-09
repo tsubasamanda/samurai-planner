@@ -38,7 +38,7 @@ impl eframe::App for App {
             egui::MenuBar::new().ui(ui, |ui| {
                 ui.menu_button("File", |ui| {
                     if ui.button("New Project").clicked() {
-                        self.active_windows.add(Box::new(crate::ui::new_project::NewProjectDialog::default()));
+                        
                     }
 
                     if ui.button("Open Project").clicked() {

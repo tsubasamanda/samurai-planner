@@ -3,12 +3,18 @@
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct App {
-
+    #[serde(skip)]
+    active_windows: crate::window::ActiveWindows,
+    #[serde(skip)]
+    open_projects: Vec<crate::project::project::Project>
 }
 
 impl Default for App {
     fn default() -> Self {
-        Self {}
+        Self {
+            active_windows: crate::window::ActiveWindows::new(),
+            open_projects: Vec::new()
+        }
     }
 }
 
@@ -24,7 +30,37 @@ impl App {
 
 
 impl eframe::App for App {
-    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        todo!()
+    fn save(&mut self, storage: &mut dyn eframe::Storage) {
+        eframe::set_value(storage, eframe::APP_KEY, self);
+    }
+
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::TopBottomPanel::top("toolbar").show(ctx, |ui| {
+            egui::MenuBar::new().ui(ui, |ui| {
+                ui.menu_button("File", |ui| {
+                    if ui.button("Open Project").clicked() {
+
+                    }
+                });
+
+                ui.menu_button("Help", |ui| {
+                    if ui.button("About").clicked() {
+                        self.active_windows.add(Box::new(crate::ui::about::AboutWindow::default()));
+                    }
+                });
+            })
+        });
+
+        egui::SidePanel::left("project_panel")
+            .min_width(300.0)
+            .show(ctx, |ui| {
+                for p in self.open_projects.iter() {
+                    ui.collapsing(p.title.clone(), |ui| {
+                        
+                    });
+                }
+            });
+
+        self.active_windows.render(ctx);
     }
 }

@@ -1,6 +1,7 @@
 #![warn(clippy::all, rust_2018_idioms)]
 
 use crate::project::sheet::Sheet;
+use crate::ui::palette::palette_window;
 use crate::ui::sheet::SheetWindow;
 use crate::window::ActiveWindows;
 use crate::ui::about::AboutWindow;
@@ -8,13 +9,21 @@ use crate::ui::about::AboutWindow;
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct App {
-    active_windows: ActiveWindows
+    active_windows: ActiveWindows,
+    toolbars: Toolbars
+}
+
+#[derive(Default)]
+#[derive(serde::Deserialize, serde::Serialize)]
+struct Toolbars {
+    palette: bool
 }
 
 impl Default for App {
     fn default() -> Self {
         Self {
-            active_windows: ActiveWindows::new()
+            active_windows: ActiveWindows::new(),
+            toolbars: Toolbars::default()
         }
     }
 }
@@ -47,6 +56,10 @@ impl eframe::App for App {
                     }
                 });
 
+                ui.menu_button("View", |ui| {
+                    ui.checkbox(&mut self.toolbars.palette, "Palette");
+                });
+
                 ui.menu_button("Help", |ui| {
                     if ui.button("About").clicked() {
                         self.active_windows.add(Box::new(AboutWindow::default()));
@@ -54,6 +67,10 @@ impl eframe::App for App {
                 });
             })
         });
+
+        if self.toolbars.palette {
+            palette_window(ctx);
+        }
 
         self.active_windows.render(ctx);
 		self.active_windows.prune();

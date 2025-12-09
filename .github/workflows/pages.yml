@@ -10,8 +10,7 @@ on:
   release:
     types:
       - published
-
-on: workflow_dispatch
+  workflow_dispatch:
 
 permissions:
   contents: write # for committing to gh-pages branch.

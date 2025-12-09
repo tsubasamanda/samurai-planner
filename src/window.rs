@@ -15,13 +15,14 @@ impl ActiveWindows {
                 window.window(ctx);
             }
         }
-
-        // Remove all dead windows
-        self.windows.retain(|window| window.alive());
     }
 
     pub fn add(&mut self, window: Box<dyn Window>) {
         self.windows.push(window);
+    }
+
+    pub fn prune(&mut self) {
+        self.windows.retain(|window| window.alive());
     }
 }
 

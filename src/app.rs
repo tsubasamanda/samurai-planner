@@ -9,7 +9,7 @@ use crate::ui::about::AboutWindow;
 #[serde(default)]
 pub struct App {
 	#[serde(skip)]
-    active_windows: ActiveWindows,
+    active_windows: ActiveWindows
 }
 
 impl Default for App {

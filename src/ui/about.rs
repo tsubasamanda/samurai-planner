@@ -1,3 +1,5 @@
+use crate::game_version;
+
 pub struct AboutWindow {
     alive: bool
 }
@@ -19,7 +21,7 @@ impl crate::window::Window for AboutWindow {
 
                 ui.add_space(12.0);
 
-                ui.label("Built for FFXIV 7.38");
+                ui.label(format!("Built for FFXIV {}", game_version!()));
 
                 ui.add_space(12.0);
 

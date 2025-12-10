@@ -4,7 +4,7 @@ use crate::project::sheet::Sheet;
 use crate::ui::palette::palette_window;
 use crate::ui::sheet::SheetWindow;
 use crate::window::ActiveWindows;
-use crate::ui::about::AboutWindow;
+use crate::ui::about::about_window;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
@@ -16,6 +16,7 @@ pub struct App {
 #[derive(Default)]
 #[derive(serde::Deserialize, serde::Serialize)]
 struct Toolbars {
+    about: bool,
     palette: bool
 }
 
@@ -35,6 +36,16 @@ impl App {
         } else {
             Default::default()
         }
+    }
+    
+    fn update_toolbars(&mut self, ctx: &egui::Context) {
+        if self.toolbars.about {
+			about_window(ctx, &mut self.toolbars.about);
+		}
+
+		if self.toolbars.palette {
+			palette_window(ctx);
+		}
     }
 }
 
@@ -64,15 +75,13 @@ impl eframe::App for App {
 
                 ui.menu_button("Help", |ui| {
                     if ui.button("About").clicked() {
-                        self.active_windows.add(Box::new(AboutWindow::default()));
+                        self.toolbars.about = true;
                     }
                 });
             })
         });
 
-        if self.toolbars.palette {
-            palette_window(ctx);
-        }
+		self.update_toolbars(ctx);
 
         self.active_windows.render(ctx);
 		self.active_windows.prune();

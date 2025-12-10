@@ -1,49 +1,30 @@
 use crate::game_version;
 
-#[derive(serde::Deserialize, serde::Serialize)]
-pub struct AboutWindow {
-    alive: bool
-}
+pub fn about_window(ctx: &egui::Context, alive: &mut bool) {
+    egui::Window::new("About")
+        .open(alive)
+        .auto_sized()
+        .show(ctx, |ui| {
+            ui.heading("Amanda's Samurai Planner");
+            ui.label(format!("Version {}", env!("CARGO_PKG_VERSION")));
+            ui.add_space(12.0);
 
-impl Default for AboutWindow {
-    fn default() -> Self {
-        Self { alive: true }
-    }
-}
+            ui.label(format!("Built for FFXIV {}", game_version!()));
 
-#[typetag::serde]
-impl crate::window::Window for AboutWindow {
-    fn window(&mut self, ctx: &egui::Context) {
-        egui::Window::new("About")
-            .open(&mut self.alive)
-            .auto_sized()
-            .show(ctx, |ui| {
-                ui.heading("Amanda's Samurai Planner");
-                ui.label(format!("Version {}", env!("CARGO_PKG_VERSION")));
+            ui.add_space(12.0);
 
-                ui.add_space(12.0);
+            {
+                ui.heading("Built with:");
 
-                ui.label(format!("Built for FFXIV {}", game_version!()));
+                ui.hyperlink_to(
+                    "Rust",
+                    "https://rust-lang.org/",
+                );
 
-                ui.add_space(12.0);
-
-                {
-                    ui.heading("Built with:");
-
-                    ui.hyperlink_to(
-                        "Rust",
-                        "https://rust-lang.org/",
-                    );
-
-                    ui.hyperlink_to(
-                        "egui and eframe",
-                        "https://github.com/emilk/egui",
-                    );
-                }
-            });
-    }
-
-    fn alive(&self) -> bool {
-        self.alive
-    }
+                ui.hyperlink_to(
+                    "egui and eframe",
+                    "https://github.com/emilk/egui",
+                );
+            }
+        });
 }

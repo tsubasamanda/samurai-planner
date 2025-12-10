@@ -1,6 +1,8 @@
+use crate::ui::sheet::SheetWindow;
+
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct ActiveWindows {
-    windows: Vec<Box<dyn Window>>
+    windows: Vec<SheetWindow>
 }
 
 impl ActiveWindows {
@@ -18,17 +20,11 @@ impl ActiveWindows {
         }
     }
 
-    pub fn add(&mut self, window: Box<dyn Window>) {
+    pub fn add(&mut self, window: SheetWindow) {
         self.windows.push(window);
     }
 
     pub fn prune(&mut self) {
         self.windows.retain(|window| window.alive());
     }
-}
-
-#[typetag::serde(tag = "type")]
-pub trait Window {
-    fn window(&mut self, ctx: &egui::Context);
-    fn alive(&self) -> bool;
 }

@@ -17,7 +17,8 @@ pub struct App {
 #[derive(serde::Deserialize, serde::Serialize)]
 struct Toolbars {
     about: bool,
-    palette: bool
+    palette: bool,
+    comparison: bool,
 }
 
 impl Default for App {
@@ -61,10 +62,7 @@ impl eframe::App for App {
             egui::MenuBar::new().ui(ui, |ui| {
                 ui.menu_button("File", |ui| {
                     if ui.button("New Sheet").clicked() {
-                        self.active_windows.add(
-                            Box::new(
-                                SheetWindow::new(Sheet::default())
-                            )
+                        self.active_windows.add(SheetWindow::new(Sheet::default())
                         );
                     }
                 });

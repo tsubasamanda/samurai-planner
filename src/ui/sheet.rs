@@ -1,13 +1,10 @@
 use std::collections::LinkedList;
 
-use egui::{Id, RichText};
+use egui::RichText;
 use egui_dnd::dnd;
-use egui_extras::{Column, TableBuilder};
-use uuid::Uuid;
 
 use crate::project::action::Action;
 use crate::ui::gear_options::gear_options_window;
-use crate::window::Window;
 use crate::project::sheet::Sheet;
 
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -33,9 +30,8 @@ impl SheetWindow {
     }
 }
 
-#[typetag::serde]
-impl Window for SheetWindow {
-    fn window(&mut self, ctx: &egui::Context) {
+impl SheetWindow {
+    pub fn window(&mut self, ctx: &egui::Context) {
         egui::Window::new(self.sheet.title.clone())
             .id(self.sheet.id)
             .open(&mut self.alive)
@@ -78,7 +74,7 @@ impl Window for SheetWindow {
         }
     }
 
-    fn alive(&self) -> bool {
+    pub fn alive(&self) -> bool {
         self.alive
     }
 }

@@ -6,6 +6,7 @@ use egui_extras::{Column, TableBuilder};
 use uuid::Uuid;
 
 use crate::project::action::Action;
+use crate::ui::gear_options::gear_options_window;
 use crate::window::Window;
 use crate::project::sheet::Sheet;
 
@@ -13,7 +14,6 @@ use crate::project::sheet::Sheet;
 pub struct SheetWindow {
     alive: bool,
     sheet: Sheet,
-    id: Id,
     subwindows: SubWindowState
 }
 
@@ -28,7 +28,6 @@ impl SheetWindow {
         SheetWindow {
             alive: true,
             sheet: s,
-            id: Id::new(Uuid::new_v4()),
             subwindows: SubWindowState::default()
         }
     }
@@ -38,7 +37,7 @@ impl SheetWindow {
 impl Window for SheetWindow {
     fn window(&mut self, ctx: &egui::Context) {
         egui::Window::new(self.sheet.title.clone())
-            .id(self.id)
+            .id(self.sheet.id)
             .open(&mut self.alive)
             .scroll([false, true])
             .show(ctx, |ui| {
@@ -75,77 +74,7 @@ impl Window for SheetWindow {
         
 
         if self.subwindows.gear_options {
-            egui::Window::new(format!("{} - Gear Options", self.sheet.title))
-                .id(Id::new(format!("{:?}gear", self.id)))
-                .open(&mut self.subwindows.gear_options)
-                .auto_sized()
-                .show(ctx, |ui| {
-                    TableBuilder::new(ui)
-                        .striped(true)
-                        .resizable(false)
-                        .cell_layout(egui::Layout::right_to_left(egui::Align::Center))
-                        .column(Column::auto())
-                        .column(Column::auto())
-                        .body(|mut body| {
-                            // TODO: Clean this up
-                            body.row(20.0, |mut row| {
-                                row.col(|ui| {
-                                    ui.label("Weapon Damage");
-                                });
-                                row.col(|ui| {
-                                    ui.add(egui::DragValue::new(&mut self.sheet.gear.wd));
-                                });
-                            });
-                            body.row(20.0, |mut row| {
-                                row.col(|ui| {
-                                    ui.label("HP");
-                                });
-                                row.col(|ui| {
-                                    ui.add(egui::DragValue::new(&mut self.sheet.gear.hp));
-                                });
-                            });
-                            body.row(20.0, |mut row| {
-                                row.col(|ui| {
-                                    ui.label("Strength");
-                                });
-                                row.col(|ui| {
-                                    ui.add(egui::DragValue::new(&mut self.sheet.gear.str));
-                                });
-                            });
-                            body.row(20.0, |mut row| {
-                                row.col(|ui| {
-                                    ui.label("Critical Hit");
-                                });
-                                row.col(|ui| {
-                                    ui.add(egui::DragValue::new(&mut self.sheet.gear.crt));
-                                });
-                            });
-                            body.row(20.0, |mut row| {
-                                row.col(|ui| {
-                                    ui.label("Direct Hit Rate");
-                                });
-                                row.col(|ui| {
-                                    ui.add(egui::DragValue::new(&mut self.sheet.gear.dh));
-                                });
-                            });
-                            body.row(20.0, |mut row| {
-                                row.col(|ui| {
-                                    ui.label("Determination");
-                                });
-                                row.col(|ui| {
-                                    ui.add(egui::DragValue::new(&mut self.sheet.gear.det));
-                                });
-                            });
-                            body.row(20.0, |mut row| {
-                                row.col(|ui| {
-                                    ui.label("Skill Speed");
-                                });
-                                row.col(|ui| {
-                                    ui.add(egui::DragValue::new(&mut self.sheet.gear.sks));
-                                });
-                            });
-                        })
-                });
+            gear_options_window(ctx, &mut self.sheet, &mut self.subwindows.gear_options);
         }
     }
 

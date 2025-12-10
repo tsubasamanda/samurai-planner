@@ -35,7 +35,7 @@ pub struct GameAction<'a> {
     pub positional: Option<Positional>
 }
 
-pub const GAME_ACTIONS: [GameAction<'static>;38] = [
+pub const GAME_ACTIONS: [GameAction<'static>;39] = [
 	// Combo GCDs, single target followed by AOE
     GameAction {
         id: 7477,
@@ -428,6 +428,19 @@ pub const GAME_ACTIONS: [GameAction<'static>;38] = [
         buff: None,
         combo_action: None,
         positional: None,
+	},
+	GameAction {
+		id: 7499,
+		upgrades: None,
+		name: "Meikyo Shisui",
+		icon: egui::include_image!("../../assets/actions/7499.png"),
+		global: false,
+		potency: 0,
+		aoe: None,
+		kenki: 0,
+		buff: Some(Buff::MEIKYO),
+		combo_action: None,
+		positional: None,
 	},
 	GameAction {
 		id: 7490,
